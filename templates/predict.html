@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Salary Prediction</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .main-title {
+            text-align: center;
+            padding: 15px 0;
+            margin: 0;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .main-title h1 {
+            font-size: 26px;
+            color: #333;
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 30px;
+            padding: 20px 40px;
+            height: calc(100vh - 80px); /* fill screen minus title height */
+        }
+
+        .box {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.08);
+            width: 420px;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            color: #555;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 25px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8f9fa;
+        }
+
+        .salary-result {
+            font-size: 20px;
+            font-weight: bold;
+            color: #28a745;
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="main-title">
+        <h1>Employee Salary Prediction</h1>
+    </div>
+
+    <div class="container">
+        <!-- Left Form Box -->
+        <div class="box">
+            <h2>Enter Employee Details</h2>
+            <form action="/predict" method="post">
+                <label for="age">Age</label>
+                <input type="number" name="age" required>
+
+                <label for="gender">Gender</label>
+                <select name="gender" required>
+                    <option value="">--Select--</option>
+                    <option value="Male" {% if gender=='Male' %}selected{% endif %}>Male</option>
+                    <option value="Female" {% if gender=='Female' %}selected{% endif %}>Female</option>
+                </select>
+
+                <label for="education">Education Level</label>
+                <select name="education" required>
+                    <option value="">--Select--</option>
+                    <option value="High School" {% if education=="High School" %}selected{% endif %}>High School</option>
+                    <option value="Bachelor's" {% if education=="Bachelor's" %}selected{% endif %}>Bachelor's</option>
+                    <option value="Master's" {% if education=="Master's" %}selected{% endif %}>Master's</option>
+                    <option value="PhD" {% if education=="PhD" %}selected{% endif %}>PhD</option>
+                </select>
+
+                <label for="job">Job Title</label>
+                <select name="job" required>
+                    <option value="">--Select--</option>
+                    {% for title in job_titles %}
+                        <option value="{{ title }}" {% if job == title %}selected{% endif %}>{{ title }}</option>
+                    {% endfor %}
+                </select>
+
+                <label for="experience">Years of Experience</label>
+                <input type="number" step="0.1" name="experience" required>
+
+                <button type="submit">Predict Salary</button>
+            </form>
+        </div>
+
+        <!-- Right Result Box -->
+        <div class="box">
+            <h2>Prediction Output</h2>
+            {% if prediction_text %}
+                <table>
+                    <tr><th>Feature</th><th>Value</th></tr>
+                    <tr><td>Age</td><td>{{ age }}</td></tr>
+                    <tr><td>Gender</td><td>{{ gender }}</td></tr>
+                    <tr><td>Education</td><td>{{ education }}</td></tr>
+                    <tr><td>Job Title</td><td>{{ job }}</td></tr>
+                    <tr><td>Experience</td><td>{{ experience }}</td></tr>
+                </table>
+                <div class="salary-result">{{ prediction_text }}</div>
+            {% else %}
+                <p>Fill out the form to see the predicted salary.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
